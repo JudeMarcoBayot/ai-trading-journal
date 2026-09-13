@@ -1,0 +1,9 @@
+**/node_modules/
+**/venv/
+**/dist/
+**/.pytest_cache/
+**/.vite/
+**/*.tsbuildinfo
+.env
+backend/.env
+frontend/.env

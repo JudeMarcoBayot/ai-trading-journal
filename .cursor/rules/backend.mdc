@@ -1,0 +1,17 @@
+---
+description: FastAPI journal API conventions
+globs: backend/app/**/*.py
+alwaysApply: false
+---
+
+# Backend
+
+- Package-relative imports (`from .ai import ...`). Tests use `from backend.app...`.
+- `load_dotenv` reads `backend/.env` with `override=True`.
+- Date windows: `persisted_date_bounds` / `timezone_offset_minutes` (local calendar day → UTC).
+- Config errors (`*ConfigurationError`) → 503. Bybit/AI/HTTP failures → 502. Missing Supabase on reads → `[]` or `fallback_knowledge`.
+- Closing **Sell = Long**, **Buy = Short**.
+- Keep SMC math in `technical.py`. Structures are clipped to `entry_index` (pre-entry only). Do not dump algorithms into other modules.
+- Keep the LLM prompt and `_complete_from_data` merge in `ai.py`. `rule_status` is `fully compliant` | `partially compliant` | `violated` | `no rule applied`. Post-processing may overwrite chart/technical reviews; P&L must not drive violations.
+- Persistence is Supabase REST (`SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`), not an ORM. Live tables: `bybit_executions`, `ai_analyses`, `trading_knowledge`.
+- Analyze flow: executions → metrics/trades → optional 15m klines ±24h → `analyze_candles` → knowledge search → `TradingAnalyst` → save.

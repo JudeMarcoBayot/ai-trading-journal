@@ -1,0 +1,17 @@
+---
+description: React journal UI conventions
+globs: frontend/src/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Frontend
+
+- Edit surface is `App.tsx` + `App.css` (+ tokens in `index.css`). No router, no client store, no chart library.
+- API: `apiUrl` from `VITE_API_URL` (default `http://localhost:8000`). Use `selectedDataQuery(limit)` for `timezone_offset_minutes` and date range. Plain `fetch` to `/api/v1/*`.
+- Date filters do not auto-refetch; they apply on initial load, Bybit sync, and analyze.
+- Closed trades: `realized_pnl !== 0`. Position label: Bybit **Sell → Long**, **Buy → Short**.
+- `TradeChart` is custom SVG. Prefer `context.smc` from the backend; `computeFallbackSMC` only if SMC is missing.
+- Style with existing semantic classes in `App.css` (`.journal-shell`, `.metrics-strip`, …). Do not convert the UI to Tailwind utilities. Lucide icons only.
+- Do not wire `VITE_SUPABASE_*` or `@supabase/supabase-js` in the client.
+- `rule_status` must match the backend: `fully compliant` | `partially compliant` | `violated` | `no rule applied` (never `vi1olated`).
+- Normalize analysis with `normalizeAnalysis`; empty reviews → `buildFallbackTradeReviews`.

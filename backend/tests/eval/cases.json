@@ -1,0 +1,438 @@
+[
+  {
+    "id": "losing-trade-not-violation",
+    "analysis": {
+      "summary": "The trade lost money.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long only.",
+      "repeated_patterns": ["One closed trade."],
+      "risk_suggestions": ["Keep size small."],
+      "discipline_suggestions": ["Journal the setup."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "closed_trades": 1,
+        "net_pnl": "-12.50",
+        "fees": "1.00",
+        "gross_pnl": "-11.50"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-1",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "-12.50",
+        "notional": "500",
+        "fees": "1.00"
+      }],
+      "retrieved_knowledge": [{
+        "title": "Max stop loss cap",
+        "content": "If price action invalidates the setup or hits the 10% loss threshold, exit immediately.",
+        "tags": ["risk", "stop-loss"]
+      }],
+      "chart_context": {},
+      "trade_lifecycle": {},
+      "technical_context": {}
+    },
+    "expect": {
+      "rule_status": "fully compliant",
+      "forbidden_status_from_pnl": true,
+      "evidence_contains": ["-12.5"]
+    }
+  },
+  {
+    "id": "missing-stop-lowers-confidence",
+    "analysis": {
+      "summary": "Review of a long that closed lower.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["Single fill."],
+      "risk_suggestions": ["Define a stop."],
+      "discipline_suggestions": ["Record invalidation."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "closed_trades": 1,
+        "net_pnl": "-10",
+        "fees": "0.5",
+        "gross_pnl": "-9.5"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-2",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "-10",
+        "notional": "400",
+        "fees": "0.5"
+      }],
+      "retrieved_knowledge": [{
+        "title": "Define a stop",
+        "content": "Place a stop before entry.",
+        "tags": ["stop", "risk"]
+      }],
+      "chart_context": {
+        "candles": [{"timestamp": "1", "open": "1", "high": "1", "low": "1", "close": "1"}]
+      },
+      "trade_lifecycle": {
+        "direction": "Long",
+        "entry_at": "2026-01-01T00:00:00+00:00",
+        "exit_at": "2026-01-01T01:00:00+00:00",
+        "entry_price": "100",
+        "exit_price": "90",
+        "holding_seconds": 3600
+      },
+      "technical_context": {"trend": "bearish"}
+    },
+    "expect": {
+      "rule_status": "fully compliant",
+      "max_confidence": 0.5,
+      "missing_evidence_contains": ["stop"]
+    }
+  },
+  {
+    "id": "summary-aligns-to-bearish-trend",
+    "analysis": {
+      "summary": "The trade was a Long entry in ETHUSDT, where the setup was bullish with EMA20 above EMA50, but the trade resulted in a loss due to hitting the stop loss.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Respect structure."],
+      "discipline_suggestions": ["Do not relabel trend."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "-5",
+        "fees": "0.2",
+        "gross_pnl": "-4.8"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-3",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "-5",
+        "notional": "300",
+        "fees": "0.2"
+      }],
+      "retrieved_knowledge": [],
+      "chart_context": {},
+      "trade_lifecycle": {},
+      "technical_context": {
+        "trend": "bearish",
+        "technical_summary": "The 15-minute structure at entry was bearish (descending channel, bearish CHoCH)."
+      }
+    },
+    "expect": {
+      "summary_startswith": "the 15-minute structure at entry was bearish",
+      "summary_must_not_contain": ["setup was bullish"]
+    }
+  },
+  {
+    "id": "summary-aligns-to-bullish-trend",
+    "analysis": {
+      "summary": "The setup was bearish with EMA20 above EMA50, but price continued higher.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Respect structure."],
+      "discipline_suggestions": ["Do not relabel trend."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "5",
+        "fees": "0.2",
+        "gross_pnl": "5.2"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-4",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "5",
+        "notional": "300",
+        "fees": "0.2"
+      }],
+      "retrieved_knowledge": [],
+      "chart_context": {},
+      "trade_lifecycle": {},
+      "technical_context": {
+        "trend": "bullish",
+        "technical_summary": "The 15-minute structure at entry was bullish (ascending channel, bullish CHoCH)."
+      }
+    },
+    "expect": {
+      "summary_startswith": "the 15-minute structure at entry was bullish",
+      "summary_must_not_contain": ["setup was bearish"]
+    }
+  },
+  {
+    "id": "mixed-trend-not-forced-bullish",
+    "analysis": {
+      "summary": "The setup was bullish with EMA20 above EMA50, and the trade was held overnight.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Mixed.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Wait for clarity."],
+      "discipline_suggestions": ["Do not force a bias."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "0",
+        "fees": "0.1",
+        "gross_pnl": "0.1"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-5",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "0",
+        "notional": "200",
+        "fees": "0.1"
+      }],
+      "retrieved_knowledge": [],
+      "chart_context": {},
+      "trade_lifecycle": {},
+      "technical_context": {
+        "trend": "mixed",
+        "technical_summary": "The 15-minute structure at entry was mixed."
+      }
+    },
+    "expect": {
+      "summary_startswith": "the 15-minute structure at entry was mixed",
+      "summary_must_not_contain": ["setup was bullish"]
+    }
+  },
+  {
+    "id": "no-knowledge-no-rule-applied",
+    "analysis": {
+      "summary": "Closed trade with no personal rulebook.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Add rules."],
+      "discipline_suggestions": ["Write a rulebook."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "-3",
+        "fees": "0.2",
+        "gross_pnl": "-2.8"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-6",
+        "symbol": "BTCUSDT",
+        "fill_count": 1,
+        "realized_pnl": "-3",
+        "notional": "1000",
+        "fees": "0.2"
+      }],
+      "retrieved_knowledge": [],
+      "chart_context": {},
+      "trade_lifecycle": {},
+      "technical_context": {}
+    },
+    "expect": {
+      "rule_status": "no rule applied",
+      "forbidden_status_from_pnl": true
+    }
+  },
+  {
+    "id": "high-fee-partial-compliance",
+    "analysis": {
+      "summary": "Fees were large versus notional.",
+      "trade_reviews": [],
+      "fee_impact": "",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Cut size."],
+      "discipline_suggestions": ["Watch fees."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 2,
+        "trade_count": 1,
+        "net_pnl": "1",
+        "fees": "12",
+        "gross_pnl": "13"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-7",
+        "symbol": "ETHUSDT",
+        "fill_count": 2,
+        "realized_pnl": "1",
+        "notional": "100",
+        "fees": "12"
+      }],
+      "retrieved_knowledge": [{
+        "title": "Fee discipline",
+        "content": "Fees matter. Review gross, net, and fee impact together.",
+        "tags": ["fees", "risk"]
+      }],
+      "chart_context": {},
+      "trade_lifecycle": {},
+      "technical_context": {}
+    },
+    "expect": {
+      "rule_status": "partially compliant",
+      "fee_impact_contains": ["12"],
+      "notes_must_not_treat_pnl_as_violation": true
+    }
+  },
+  {
+    "id": "zero-holding-omitted-from-evidence",
+    "analysis": {
+      "summary": "Holding time unknown.",
+      "trade_reviews": [{
+        "order_id": "eval-8",
+        "symbol": "ETHUSDT",
+        "rule_status": "fully compliant",
+        "compliance_score": 80,
+        "matched_rules": [],
+        "notes": "ok",
+        "evidence": ["Holding time was 0 seconds."],
+        "missing_evidence": ["Trade duration was 0 seconds."],
+        "confidence": 0.5
+      }],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Record duration."],
+      "discipline_suggestions": ["Sync full lifecycle."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "2",
+        "fees": "0.1",
+        "gross_pnl": "2.1"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-8",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "2",
+        "notional": "250",
+        "fees": "0.1"
+      }],
+      "retrieved_knowledge": [{
+        "title": "Risk-first journal rule",
+        "content": "Define a stop before entering.",
+        "tags": ["risk"]
+      }],
+      "chart_context": {},
+      "trade_lifecycle": {
+        "direction": "Long",
+        "entry_at": "2026-01-01T00:00:00+00:00",
+        "exit_at": "2026-01-01T00:00:00+00:00",
+        "entry_price": "100",
+        "exit_price": "101",
+        "holding_seconds": 0
+      },
+      "technical_context": {}
+    },
+    "expect": {
+      "evidence_must_not_contain": ["0 second", "0s"],
+      "missing_evidence_must_not_contain": ["0 second", "0s"]
+    }
+  },
+  {
+    "id": "chart-unavailable-review",
+    "analysis": {
+      "summary": "No candles were loaded.",
+      "trade_reviews": [],
+      "fee_impact": "Fees were modest.",
+      "long_vs_short": "Long.",
+      "repeated_patterns": ["One trade."],
+      "risk_suggestions": ["Load chart context."],
+      "discipline_suggestions": ["Analyze one trade."]
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "0.5",
+        "fees": "0.1",
+        "gross_pnl": "0.6"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-9",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "0.5",
+        "notional": "200",
+        "fees": "0.1",
+        "side": "Sell",
+        "average_price": "100"
+      }],
+      "retrieved_knowledge": [],
+      "chart_context": {"candles": []},
+      "trade_lifecycle": {},
+      "technical_context": {}
+    },
+    "expect": {
+      "chart_review_contains": ["unavailable"]
+    }
+  },
+  {
+    "id": "technical-summary-overrides-model",
+    "analysis": {
+      "summary": "The setup was bullish with EMA20 above EMA50.",
+      "trade_reviews": [],
+      "chart_review": "The model invented a bullish order block.",
+      "technical_review": "The model invented a bullish trend.",
+      "fee_impact": "The model did not provide a fee-impact summary.",
+      "long_vs_short": "The model did not provide a directional comparison.",
+      "repeated_patterns": [],
+      "risk_suggestions": [],
+      "discipline_suggestions": []
+    },
+    "context": {
+      "metrics": {
+        "fill_count": 1,
+        "trade_count": 1,
+        "net_pnl": "-1",
+        "fees": "0.4",
+        "gross_pnl": "-0.6"
+      },
+      "grouped_orders": [{
+        "order_id": "eval-10",
+        "symbol": "ETHUSDT",
+        "fill_count": 1,
+        "realized_pnl": "-1",
+        "notional": "150",
+        "fees": "0.4",
+        "side": "Sell",
+        "average_price": "100"
+      }],
+      "retrieved_knowledge": [],
+      "chart_context": {"candles": []},
+      "trade_lifecycle": {},
+      "technical_context": {
+        "trend": "bearish",
+        "technical_summary": "The 15-minute structure at entry was bearish (descending channel)."
+      }
+    },
+    "expect": {
+      "technical_review_contains": ["bearish"],
+      "technical_review_must_not_contain": ["invented"],
+      "fee_impact_contains": ["0.4"],
+      "summary_startswith": "the 15-minute structure at entry was bearish"
+    }
+  }
+]
